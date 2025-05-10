@@ -118,7 +118,7 @@ app.use(helmet.referrerPolicy())
 app.use(helmet.xssFilter())
 
 // middlewares
-// app.use(Validator.validateToken)
+app.use(Validator.validateToken)
 app.post("/v1/send-email", async (req, res, next) => {
 	try {
 		await sendEmail(Number(req.body.emailType ?? 9999999), req.body.payload)
