@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+  node:
+    build: .
+    container_name: "cabapp-be-auth-ms"
+    ports:
+      - 7022:7022
+    environment:
+      - REDIS_HOST=${REDIS_SERVER_HOST}
+      - REDIS_PORT=${REDIS_SERVER_PORT}
+      - REDIS_PASSWORD=${REDIS_SERVER_PASSWORD}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_PORT=${DB_PORT}
+      - POSTGRES_DB=${MAIN_DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - accessLogs:/application/public/logs/accessLogs
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    external: true
+
+volumes:
+  accessLogs:
+    driver: local

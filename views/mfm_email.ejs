@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+          <title>New Customer Query</title>
+          <style>
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              background: #f4f4f4;
+              padding: 20px;
+              margin: 0;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background: #ffffff;
+              border-radius: 10px;
+              overflow: hidden;
+              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+              animation: fadeIn 1s ease;
+            }
+            .header {
+              background: linear-gradient(135deg, #6a11cb, #2575fc);
+              color: #ffffff;
+              padding: 30px;
+              text-align: center;
+            }
+            .header h1 {
+              margin: 0;
+              font-size: 28px;
+              letter-spacing: 1px;
+            }
+            .content {
+              padding: 30px;
+              color: #333333;
+            }
+            .content h2 {
+              color: #6a11cb;
+              font-size: 22px;
+              margin-bottom: 15px;
+            }
+            .detail {
+              margin-bottom: 15px;
+              border-left: 4px solid #6a11cb;
+              padding: 10px 15px;
+              background: #f9f9f9;
+              border-radius: 5px;
+            }
+            .detail strong {
+              display: block;
+              color: #444444;
+              margin-bottom: 5px;
+              font-size: 14px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            .detail span {
+              font-size: 16px;
+              color: #000000;
+            }
+            .footer {
+              text-align: center;
+              padding: 20px;
+              font-size: 14px;
+              color: #888888;
+              background: #f0f0f0;
+              border-top: 1px solid #e0e0e0;
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(-10px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            .highlight {
+              color: #e91e63;
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>📩 New Customer Query Received</h1>
+            </div>
+            <div class="content">
+              <h2>Customer Details:</h2>
+
+              <div class="detail">
+                <strong>Name:</strong>
+                <span><%=name%></span>
+              </div>
+
+              <div class="detail">
+                <strong>Phone Number:</strong>
+                <span><%=mobile%></span>
+              </div>
+
+              <div class="detail">
+                <strong>Email:</strong>
+                <span><%=email%></span>
+              </div>
+
+              <div class="detail">
+                <strong>Message:</strong>
+                <span class="highlight"><%=message%></span>
+              </div>
+
+            </div>
+            <div class="footer">
+              🚀 This is an auto generated notification from your website.<br>&copy; 2025 Modern Fragrant Merchants. All rights reserved.
+            </div>
+          </div>
+        </body>
+        </html>
