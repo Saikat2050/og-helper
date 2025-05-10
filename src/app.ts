@@ -9,6 +9,7 @@ import moment from "moment"
 import morgan from "morgan"
 import path from "path"
 import { createStream } from "rotating-file-stream"
+import jwt from "jsonwebtoken"
 dotenv.config()
 
 /* libs */
@@ -116,6 +117,10 @@ app.use(helmet.originAgentCluster())
 app.use(helmet.permittedCrossDomainPolicies())
 app.use(helmet.referrerPolicy())
 app.use(helmet.xssFilter())
+
+app.get('/health', (req, res) => {
+	return res.status(200).send('OK');
+  });
 
 // middlewares
 app.use(Validator.validateToken)
