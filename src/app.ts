@@ -9,6 +9,7 @@ import moment from "moment"
 import morgan from "morgan"
 import path from "path"
 import { createStream } from "rotating-file-stream"
+import axios from "axios"
 import jwt from "jsonwebtoken"
 dotenv.config()
 
@@ -137,5 +138,12 @@ app.use("*", ApiMiddlewares.middleware404)
 app.use(ApiMiddlewares.exceptionHandler)
 
 app.listen(port, async () => {
+	setInterval(async function () {
+		try {
+		  await axios.get(`${process.env.BASE_URL_API}/health`);
+		} catch (error) {
+		  console.error(error);
+		}
+	  }, 270000);
 	eventEmitter.emit("logging", `Auth ms is up and running on port: ${port}`)
 })
