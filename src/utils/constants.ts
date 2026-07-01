@@ -7,7 +7,7 @@ export const EMAIL_TEMPLATE_TYPE = {
 	2: {
 		fileName: 'thrive_nest_email.ejs',
 		subject: '🎯 Hot Lead Incoming – Details Inside!',
-		email: 'saikatsantra2050@gmail.com'
+		email: 'soumas9277@gmail.com'
 	}
 }
 
