@@ -2,7 +2,7 @@ import Crypto from "crypto"
 import isJSON from "is-json"
 import _ from "lodash"
 import ejs from "ejs"
-import {ALLOWED_EMAIL_TEMPLATE_TYPES, EMAIL_TEMPLATE_TYPE} from './constants'
+import {ALLOWED_EMAIL_TEMPLATE_TYPES, EMAIL_TEMPLATE_TYPE} from "./constants"
 import path from "path"
 import nodemailer from "nodemailer"
 import eventEmitter from "../libs/logging"
@@ -268,14 +268,17 @@ export async function referralCodeGenerator(
 	return `BK${roleSlug.toString().slice(0, 2)}${uniqueStr}${padded}`
 }
 
-export async function sendEmail(emailType: number, payload: any = {}): Promise<boolean> {
+export async function sendEmail(
+	emailType: number,
+	payload: any = {}
+): Promise<boolean> {
 	try {
 		const email: string[] = []
 		let configuration: any = {
 			subject: "It's a test mail",
 			...payload
 		}
-		let fileName = 'default.ejs'
+		let fileName = "default.ejs"
 
 		if (ALLOWED_EMAIL_TEMPLATE_TYPES.indexOf(Number(emailType)) < 0) {
 			throw new Error("Unknown emailType")
@@ -289,14 +292,19 @@ export async function sendEmail(emailType: number, payload: any = {}): Promise<b
 
 		if ((payload?.emails ?? []).length) {
 			payload.emails.forEach((el) => {
-				const currentEmail: string = (el ?? '').toString().trim()
-				if (currentEmail !== '' && email.indexOf((currentEmail)) < 0) {
+				const currentEmail: string = (el ?? "").toString().trim()
+				if (currentEmail !== "" && email.indexOf(currentEmail) < 0) {
 					email.push(currentEmail)
 				}
-			});
+			})
 		}
 
-		if (!email.length && (EMAIL_TEMPLATE_TYPE[Number(emailType)]?.email ?? '').toString().trim() !== '') {
+		if (
+			!email.length &&
+			(EMAIL_TEMPLATE_TYPE[Number(emailType)]?.email ?? "")
+				.toString()
+				.trim() !== ""
+		) {
 			email.push(EMAIL_TEMPLATE_TYPE[Number(emailType)].email)
 		}
 
@@ -326,7 +334,7 @@ export async function sendEmail(emailType: number, payload: any = {}): Promise<b
 					}
 				}
 			)
-		})	
+		})
 	} catch (err) {
 		throw err
 	}

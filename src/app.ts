@@ -2,15 +2,16 @@ import bodyParser from "body-parser"
 import compression from "compression"
 import cors from "cors"
 import * as dotenv from "dotenv"
-import express, { Application } from "express"
+import express, {Application} from "express"
 import fs from "fs"
 import helmet from "helmet"
 import moment from "moment"
 import morgan from "morgan"
 import path from "path"
-import { createStream } from "rotating-file-stream"
+import {createStream} from "rotating-file-stream"
 import axios from "axios"
-import jwt from "jsonwebtoken"
+// import jwt from "jsonwebtoken"
+import net from "net"
 dotenv.config()
 
 /* libs */
@@ -19,7 +20,7 @@ import Validator from "./middlewares/Validator"
 
 /* Middlewares */
 import ApiMiddlewares from "./middlewares/ApiMiddlewares"
-import { sendEmail } from "./utils/helper"
+import {sendEmail} from "./utils/helper"
 // import SlugValidation from "./middlewares/SlugValidation"
 
 const port: number = parseInt(process.env.PORT as string) || 5022
@@ -119,19 +120,42 @@ app.use(helmet.permittedCrossDomainPolicies())
 app.use(helmet.referrerPolicy())
 app.use(helmet.xssFilter())
 
-app.get('/health', (req, res) => {
-	return res.status(200).send('OK');
-  });
+app.get("/health", (req, res) => {
+	return res.status(200).send("OK")
+})
 
 // middlewares
 app.use(Validator.validateToken)
 app.post("/v1/send-email", async (req, res, next) => {
 	try {
 		await sendEmail(Number(req.body.emailType ?? 9999999), req.body.payload)
-		return res.json({ message: 'Email sent successfully!' })
+		return res.json({message: "Email sent successfully!"})
 	} catch (error) {
 		next(error)
 	}
+})
+
+app.get("/v1/smtp-test", (req, res) => {
+	const socket = net.createConnection({
+		host: "smtp.gmail.com",
+		port: 465
+	})
+
+	socket.setTimeout(10000)
+
+	socket.on("connect", () => {
+		socket.destroy()
+		res.send("Connected")
+	})
+
+	socket.on("timeout", () => {
+		socket.destroy()
+		res.status(500).send("Timeout")
+	})
+
+	socket.on("error", (err) => {
+		res.status(500).json(err)
+	})
 })
 
 app.use("*", ApiMiddlewares.middleware404)
@@ -140,10 +164,15 @@ app.use(ApiMiddlewares.exceptionHandler)
 app.listen(port, async () => {
 	setInterval(async function () {
 		try {
-		  await axios.get(`${process.env.BASE_URL_API}/health`);
+			await axios.get(`${process.env.BASE_URL_API}/health`)
 		} catch (error) {
-		  console.error(error);
+			eventEmitter.emit(
+				"logging",
+				`Health check failed - ${
+					error instanceof Error ? error.message : String(error)
+				}`
+			)
 		}
-	  }, 270000);
+	}, 270000)
 	eventEmitter.emit("logging", `Auth ms is up and running on port: ${port}`)
 })
