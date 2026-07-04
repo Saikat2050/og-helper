@@ -17,3 +17,14 @@ export const EMAIL_TEMPLATE_TYPE = {
 }
 
 export const ALLOWED_EMAIL_TEMPLATE_TYPES = [1, 2, 3]
+
+export const OUTBOUND_EMAIL_TEMPLATE_TYPE = {
+	1: {
+		fileName: "query_registered_email.ejs",
+		subject: "We received your query | Tech Square Nest"
+	}
+}
+
+export const ALLOWED_OUTBOUND_EMAIL_TEMPLATE_TYPES = [1]
+
+export const DEFAULT_OUTBOUND_EMAIL_TYPE = 1

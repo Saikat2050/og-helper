@@ -2,7 +2,13 @@ import Crypto from "crypto"
 import isJSON from "is-json"
 import _ from "lodash"
 import ejs from "ejs"
-import {ALLOWED_EMAIL_TEMPLATE_TYPES, EMAIL_TEMPLATE_TYPE} from "./constants"
+import {
+	ALLOWED_EMAIL_TEMPLATE_TYPES,
+	ALLOWED_OUTBOUND_EMAIL_TEMPLATE_TYPES,
+	DEFAULT_OUTBOUND_EMAIL_TYPE,
+	EMAIL_TEMPLATE_TYPE,
+	OUTBOUND_EMAIL_TEMPLATE_TYPE
+} from "./constants"
 import path from "path"
 import nodemailer from "nodemailer"
 import eventEmitter from "../libs/logging"
@@ -11,10 +17,20 @@ const transporter = nodemailer.createTransport({
 	// service: process.env.NODEMAILER_SERVICE,
 	host: process.env.NODEMAILER_HOST,
 	port: Number(process.env.NODEMAILER_PORT),
-	secure: true,
+	secure: false,
 	auth: {
-		user: process.env.NODEMAILER_USER,
+		user: process.env.NODEMAILER_USER_EMAIL,
 		pass: process.env.NODEMAILER_PASSWORD
+	}
+})
+
+const outboundTransporter = nodemailer.createTransport({
+	host: process.env.NODEMAILER_OUTBOUND_HOST,
+	port: Number(process.env.NODEMAILER_OUTBOUND_PORT),
+	secure: false,
+	auth: {
+		user: process.env.NODEMAILER_OUTBOUND_USER_EMAIL,
+		pass: process.env.NODEMAILER_OUTBOUND_PASSWORD
 	}
 })
 
@@ -30,7 +46,8 @@ export default {
 	decryptBycrypto,
 	stringCaseSkipping,
 	createSlug,
-	sendEmail
+	sendEmail,
+	sendOutboundEmail
 }
 
 export async function generateOtp() {
@@ -332,6 +349,81 @@ export async function sendEmail(
 							}
 						})
 					}
+				}
+			)
+		})
+	} catch (err) {
+		throw err
+	}
+}
+
+function normalizeRecipients(to: string | string[]): string[] {
+	const recipients = (Array.isArray(to) ? to : [to])
+		.map((email) => (email ?? "").toString().trim())
+		.filter((email) => email !== "")
+
+	return [...new Set(recipients)]
+}
+
+export async function sendOutboundEmail(
+	emailType: number = DEFAULT_OUTBOUND_EMAIL_TYPE,
+	to: string | string[],
+	payload: any = {}
+): Promise<boolean> {
+	try {
+		const recipients = normalizeRecipients(to)
+
+		if (!recipients.length) {
+			throw new Error("Recipient email (to) is required")
+		}
+
+		for (const recipient of recipients) {
+			if (!(await regexEmail(recipient))) {
+				throw new Error(`Invalid recipient email: ${recipient}`)
+			}
+		}
+
+		if (
+			ALLOWED_OUTBOUND_EMAIL_TEMPLATE_TYPES.indexOf(Number(emailType)) < 0
+		) {
+			throw new Error("Unknown emailType")
+		}
+
+		const template = OUTBOUND_EMAIL_TEMPLATE_TYPE[Number(emailType)]
+		const configuration: any = {
+			subject: template?.subject,
+			...payload
+		}
+		const fileName = template?.fileName
+
+		return new Promise((resolve, reject) => {
+			ejs.renderFile(
+				path.join(__dirname, `../../views/${fileName}`),
+				configuration,
+				(err, result) => {
+					if (err) {
+						eventEmitter.emit(`err?.message`, err?.message)
+						throw err
+					}
+
+					const message = {
+						from: process.env.NODEMAILER_OUTBOUND_FROM as string,
+						to: recipients,
+						subject: configuration.subject,
+						html: result
+					}
+
+					outboundTransporter.sendMail(
+						message,
+						function (error, info) {
+							if (error) {
+								eventEmitter.emit(`logging`, error?.message)
+								return reject(error)
+							}
+
+							return resolve(info)
+						}
+					)
 				}
 			)
 		})

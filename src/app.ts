@@ -20,7 +20,7 @@ import Validator from "./middlewares/Validator"
 
 /* Middlewares */
 import ApiMiddlewares from "./middlewares/ApiMiddlewares"
-import {sendEmail} from "./utils/helper"
+import {sendEmail, sendOutboundEmail} from "./utils/helper"
 // import SlugValidation from "./middlewares/SlugValidation"
 
 const port: number = parseInt(process.env.PORT as string) || 5022
@@ -129,6 +129,29 @@ app.use(Validator.validateToken)
 app.post("/v1/send-email", async (req, res, next) => {
 	try {
 		await sendEmail(Number(req.body.emailType ?? 9999999), req.body.payload)
+		return res.json({message: "Email sent successfully!"})
+	} catch (error) {
+		next(error)
+	}
+})
+
+app.post("/v1/send-user-email", async (req, res, next) => {
+	try {
+		const to = req.body.to ?? req.body.payload?.to
+
+		if (!to) {
+			return next({
+				statusCode: 422,
+				code: "validation_error",
+				message: "Recipient email (to) is required"
+			})
+		}
+
+		await sendOutboundEmail(
+			Number(req.body.emailType ?? 1),
+			to,
+			req.body.payload ?? {}
+		)
 		return res.json({message: "Email sent successfully!"})
 	} catch (error) {
 		next(error)
