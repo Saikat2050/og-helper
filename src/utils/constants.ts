@@ -11,7 +11,7 @@ export const EMAIL_TEMPLATE_TYPE = {
 	},
 	3: {
 		fileName: "leads_thrive_nest_email.ejs",
-		subject: "💼 New Website Inquiry | Thrive Nest Labs",
+		subject: "💼 New Website Inquiry | Tech Square Nest",
 		email: "soumas9277@gmail.com"
 	}
 }
