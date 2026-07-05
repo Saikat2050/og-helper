@@ -20,6 +20,8 @@ import Validator from "./middlewares/Validator"
 
 /* Middlewares */
 import ApiMiddlewares from "./middlewares/ApiMiddlewares"
+import crmRouter, {crmLogin} from "./crm/routes"
+import gmailRouter, {gmailOAuthCallback} from "./gmail/routes"
 import {sendEmail, sendOutboundEmail} from "./utils/helper"
 // import SlugValidation from "./middlewares/SlugValidation"
 
@@ -124,6 +126,10 @@ app.get("/health", (req, res) => {
 	return res.status(200).send("OK")
 })
 
+app.get("/v1/gmail/oauth/callback", gmailOAuthCallback)
+
+app.post("/v1/crm/login", crmLogin)
+
 // middlewares
 app.use(Validator.validateToken)
 app.post("/v1/send-email", async (req, res, next) => {
@@ -157,6 +163,9 @@ app.post("/v1/send-user-email", async (req, res, next) => {
 		next(error)
 	}
 })
+
+app.use("/v1/gmail", gmailRouter)
+app.use("/v1/crm", crmRouter)
 
 app.get("/v1/smtp-test", (req, res) => {
 	const socket = net.createConnection({
