@@ -6,7 +6,9 @@ type GmailHeader = {
 }
 
 type GmailMessagePart = {
+	partId?: string | null
 	mimeType?: string | null
+	headers?: GmailHeader[] | null
 	body?: {
 		data?: string | null
 		attachmentId?: string | null
@@ -85,23 +87,143 @@ export function parseMessageBody(payload: GmailMessagePart | undefined | null) {
 	return body
 }
 
+function getFilenameFromPart(part: GmailMessagePart): string | null {
+	const direct = (part.filename ?? "").trim()
+	if (direct) {
+		return direct
+	}
+
+	const contentType = getHeaderValue(
+		part.headers ?? undefined,
+		"Content-Type"
+	)
+	if (contentType) {
+		const nameMatch =
+			contentType.match(/name="([^"]+)"/i) ??
+			contentType.match(/name=([^;\s]+)/i)
+		if (nameMatch?.[1]) {
+			return nameMatch[1].trim().replace(/^["']|["']$/g, "")
+		}
+	}
+
+	const disposition = getHeaderValue(
+		part.headers ?? undefined,
+		"Content-Disposition"
+	)
+	if (disposition) {
+		const encodedMatch = disposition.match(/filename\*=UTF-8''([^;\s]+)/i)
+		if (encodedMatch?.[1]) {
+			try {
+				return decodeURIComponent(encodedMatch[1].trim())
+			} catch {
+				return encodedMatch[1].trim()
+			}
+		}
+
+		const quotedMatch =
+			disposition.match(/filename="([^"]+)"/i) ??
+			disposition.match(/filename=([^;\s]+)/i)
+		if (quotedMatch?.[1]) {
+			return quotedMatch[1].trim().replace(/^["']|["']$/g, "")
+		}
+	}
+
+	return null
+}
+
+function isContainerMimeType(mimeType: string | null | undefined): boolean {
+	return (mimeType ?? "").toLowerCase().startsWith("multipart/")
+}
+
+function isBodyMimeType(mimeType: string | null | undefined): boolean {
+	const mime = (mimeType ?? "").toLowerCase()
+	return mime === "text/plain" || mime === "text/html"
+}
+
+function isAttachmentPart(part: GmailMessagePart): boolean {
+	const mimeType = (part.mimeType ?? "application/octet-stream").toLowerCase()
+
+	if (isContainerMimeType(mimeType)) {
+		return false
+	}
+
+	const filename = getFilenameFromPart(part)
+	const hasPayload =
+		Boolean(part.body?.attachmentId) ||
+		Boolean(part.body?.data) ||
+		(part.body?.size ?? 0) > 0
+
+	if (part.body?.attachmentId) {
+		return true
+	}
+
+	if (!hasPayload) {
+		return false
+	}
+
+	if (filename) {
+		return !isBodyMimeType(mimeType) || Boolean(part.body?.attachmentId)
+	}
+
+	const disposition = (
+		getHeaderValue(part.headers ?? undefined, "Content-Disposition") ?? ""
+	).toLowerCase()
+
+	return disposition.includes("attachment")
+}
+
+export function findMessagePartById(
+	payload: GmailMessagePart | undefined | null,
+	partId: string
+): GmailMessagePart | null {
+	if (!payload) {
+		return null
+	}
+
+	if (payload.partId === partId) {
+		return payload
+	}
+
+	for (const child of payload.parts ?? []) {
+		const match = findMessagePartById(child, partId)
+		if (match) {
+			return match
+		}
+	}
+
+	return null
+}
+
 export function parseAttachments(
 	payload: GmailMessagePart | undefined | null
 ): ParsedGmailAttachment[] {
 	const attachments: ParsedGmailAttachment[] = []
+	const seen = new Set<string>()
 
 	function walk(part: GmailMessagePart | undefined | null) {
 		if (!part) {
 			return
 		}
 
-		if (part.body?.attachmentId) {
-			attachments.push({
-				id: part.body.attachmentId,
-				filename: part.filename ?? "attachment",
-				mimeType: part.mimeType ?? "application/octet-stream",
-				size: part.body.size ?? 0
-			})
+		if (isAttachmentPart(part)) {
+			const filename = getFilenameFromPart(part) ?? "attachment"
+			const mimeType = part.mimeType ?? "application/octet-stream"
+			const id =
+				part.body?.attachmentId ??
+				(part.partId
+					? `part:${part.partId}`
+					: `${filename}:${attachments.length}`)
+			const dedupeKey = `${id}:${filename}`
+
+			if (!seen.has(dedupeKey)) {
+				seen.add(dedupeKey)
+				attachments.push({
+					id,
+					filename,
+					mimeType,
+					size: part.body?.size ?? 0
+				})
+			}
 		}
 
 		for (const child of part.parts ?? []) {

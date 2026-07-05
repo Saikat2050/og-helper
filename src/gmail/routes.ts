@@ -2,6 +2,7 @@ import {NextFunction, Request, Response, Router} from "express"
 import {exchangeGmailAuthCode, getGmailAuthUrl} from "./gmailClient"
 import {
 	deleteGmailMessage,
+	getGmailAttachment,
 	getGmailMessage,
 	listGmailLabels,
 	listGmailMessages,
@@ -127,6 +128,41 @@ router.get("/messages/:messageId", async (req, res, next) => {
 		return handleGmailError(error, next)
 	}
 })
+
+router.get(
+	"/messages/:messageId/attachments/:attachmentId",
+	async (req, res, next) => {
+		try {
+			const attachment = await getGmailAttachment(
+				req.params.messageId,
+				req.params.attachmentId
+			)
+
+			res.setHeader("Content-Type", attachment.mimeType)
+			res.setHeader(
+				"Content-Disposition",
+				`attachment; filename="${attachment.filename.replace(
+					/"/g,
+					""
+				)}"`
+			)
+			return res.send(attachment.data)
+		} catch (error) {
+			if (
+				error instanceof Error &&
+				error.message === "Attachment not found"
+			) {
+				return next({
+					statusCode: 404,
+					code: "gmail_attachment_not_found",
+					message: error.message
+				})
+			}
+
+			return handleGmailError(error, next)
+		}
+	}
+)
 
 router.patch("/messages/:messageId/read", async (req, res, next) => {
 	try {

@@ -1,6 +1,7 @@
 import {GmailMailboxLabel} from "./constants"
 import {getAuthenticatedGmailClient} from "./gmailClient"
 import {
+	findMessagePartById,
 	getHeaderValue,
 	normalizeMailboxLabel,
 	normalizePageSize,
@@ -112,6 +113,74 @@ export async function getGmailMessage(messageId: string) {
 		labels: response.data.labelIds ?? [],
 		body,
 		attachments: parseAttachments(payload)
+	}
+}
+
+function decodeBase64UrlToBuffer(data: string): Buffer {
+	const normalized = data.replace(/-/g, "+").replace(/_/g, "/")
+	const padded = normalized.padEnd(
+		normalized.length + ((4 - (normalized.length % 4)) % 4),
+		"="
+	)
+
+	return Buffer.from(padded, "base64")
+}
+
+export async function getGmailAttachment(
+	messageId: string,
+	attachmentRef: string
+) {
+	if (attachmentRef.startsWith("part:")) {
+		const gmail = getAuthenticatedGmailClient()
+		const response = await gmail.users.messages.get({
+			userId: "me",
+			id: messageId,
+			format: "full"
+		})
+		const partId = attachmentRef.slice("part:".length)
+		const part = findMessagePartById(response.data.payload, partId)
+
+		if (!part?.body?.data) {
+			throw new Error("Attachment not found")
+		}
+
+		const filename =
+			(part.filename ?? "").trim() ||
+			getHeaderValue(part.headers ?? undefined, "Content-Type")?.match(
+				/name="([^"]+)"/i
+			)?.[1] ||
+			"attachment"
+
+		return {
+			filename,
+			mimeType: part.mimeType ?? "application/octet-stream",
+			data: decodeBase64UrlToBuffer(part.body.data)
+		}
+	}
+
+	const gmail = getAuthenticatedGmailClient()
+	const response = await gmail.users.messages.attachments.get({
+		userId: "me",
+		messageId,
+		id: attachmentRef
+	})
+
+	if (!response.data.data) {
+		throw new Error("Attachment not found")
+	}
+
+	const message = await gmail.users.messages.get({
+		userId: "me",
+		id: messageId,
+		format: "full"
+	})
+	const attachments = parseAttachments(message.data.payload)
+	const meta = attachments.find((item) => item.id === attachmentRef)
+
+	return {
+		filename: meta?.filename ?? "attachment",
+		mimeType: meta?.mimeType ?? "application/octet-stream",
+		data: decodeBase64UrlToBuffer(response.data.data)
 	}
 }
 
