@@ -26,6 +26,7 @@ import {sendEmail, sendOutboundEmail} from "./utils/helper"
 // import SlugValidation from "./middlewares/SlugValidation"
 
 const port: number = parseInt(process.env.PORT as string) || 5022
+const JSON_BODY_LIMIT = process.env.JSON_BODY_LIMIT || "35mb"
 const app: Application = express()
 
 // For support file
@@ -99,8 +100,8 @@ app.use(ApiMiddlewares.accessControl)
 
 // utils and heplers
 app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json({limit: JSON_BODY_LIMIT}))
+app.use(bodyParser.urlencoded({extended: true, limit: JSON_BODY_LIMIT}))
 app.use(express.static(path.join(__dirname, "../", "public")))
 // @ts-ignore
 app.use(compression())
