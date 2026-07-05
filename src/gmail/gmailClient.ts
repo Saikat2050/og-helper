@@ -1,5 +1,9 @@
 import {google} from "googleapis"
-import {assertGmailConfigured, getGmailConfig} from "./config"
+import {
+	assertGmailConfigured,
+	assertGmailOAuthConfigured,
+	getGmailConfig
+} from "./config"
 import {GMAIL_SCOPES} from "./constants"
 
 export function createGmailOAuthClient() {
@@ -13,7 +17,7 @@ export function createGmailOAuthClient() {
 }
 
 export function getGmailAuthUrl(): string {
-	assertGmailConfigured()
+	assertGmailOAuthConfigured()
 
 	const oauth2Client = createGmailOAuthClient()
 
@@ -25,7 +29,7 @@ export function getGmailAuthUrl(): string {
 }
 
 export async function exchangeGmailAuthCode(code: string) {
-	assertGmailConfigured()
+	assertGmailOAuthConfigured()
 
 	const oauth2Client = createGmailOAuthClient()
 	const {tokens} = await oauth2Client.getToken(code)
