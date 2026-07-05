@@ -2,14 +2,14 @@ import Crypto from "crypto"
 import jwt from "jsonwebtoken"
 
 function safeCompare(value: string, expected: string): boolean {
-	const valueBuffer = Buffer.from(value)
-	const expectedBuffer = Buffer.from(expected)
+	const valueBytes = new TextEncoder().encode(value)
+	const expectedBytes = new TextEncoder().encode(expected)
 
-	if (valueBuffer.length !== expectedBuffer.length) {
+	if (valueBytes.length !== expectedBytes.length) {
 		return false
 	}
 
-	return Crypto.timingSafeEqual(valueBuffer, expectedBuffer)
+	return Crypto.timingSafeEqual(valueBytes, expectedBytes)
 }
 
 function getCrmCredentials() {
