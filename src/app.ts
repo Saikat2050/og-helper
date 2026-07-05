@@ -20,7 +20,7 @@ import Validator from "./middlewares/Validator"
 
 /* Middlewares */
 import ApiMiddlewares from "./middlewares/ApiMiddlewares"
-import crmRouter, {crmLogin} from "./crm/routes"
+import crmRouter, {crmLogin, crmVerifyTwoFactorLogin} from "./crm/routes"
 import gmailRouter, {gmailOAuthCallback} from "./gmail/routes"
 import {sendEmail, sendOutboundEmail} from "./utils/helper"
 // import SlugValidation from "./middlewares/SlugValidation"
@@ -129,6 +129,7 @@ app.get("/health", (req, res) => {
 app.get("/v1/gmail/oauth/callback", gmailOAuthCallback)
 
 app.post("/v1/crm/login", crmLogin)
+app.post("/v1/crm/login/verify-2fa", crmVerifyTwoFactorLogin)
 
 // middlewares
 app.use(Validator.validateToken)

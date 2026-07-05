@@ -7,6 +7,9 @@
 # build dist
 /dist/
 
+# CRM encrypted 2FA store
+/data/
+
 # logs
 /public/logs/
 

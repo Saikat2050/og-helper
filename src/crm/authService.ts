@@ -1,5 +1,10 @@
 import Crypto from "crypto"
 import jwt from "jsonwebtoken"
+import {
+	createTwoFactorLoginToken,
+	isTwoFactorEnabled,
+	verifyLoginTwoFactor
+} from "./twoFactorService"
 
 function safeCompare(value: string, expected: string): boolean {
 	const valueBytes = new TextEncoder().encode(value)
@@ -29,7 +34,28 @@ export function assertCrmAuthConfigured() {
 	}
 }
 
-export async function loginCrmUser(email: string, password: string) {
+export function issueCrmJwt() {
+	const expiresIn = process.env.JWT_TOKEN_EXPIRATION ?? "24h"
+	const configured = getCrmCredentials()
+
+	const token = jwt.sign(
+		{
+			privateKey: process.env.PRIVATE_KEY
+		},
+		process.env.JWT_SECRET_KEY as string,
+		{expiresIn}
+	)
+
+	return {
+		token,
+		expiresIn,
+		user: {
+			email: configured.email
+		}
+	}
+}
+
+async function validateCrmCredentials(email: string, password: string) {
 	assertCrmAuthConfigured()
 
 	const configured = getCrmCredentials()
@@ -47,20 +73,38 @@ export async function loginCrmUser(email: string, password: string) {
 		}
 	}
 
-	const expiresIn = process.env.JWT_TOKEN_EXPIRATION ?? "24h"
-	const token = jwt.sign(
-		{
-			privateKey: process.env.PRIVATE_KEY
-		},
-		process.env.JWT_SECRET_KEY as string,
-		{expiresIn}
-	)
+	return configured.email
+}
+
+export async function loginCrmUser(email: string, password: string) {
+	const configuredEmail = await validateCrmCredentials(email, password)
+
+	if (await isTwoFactorEnabled()) {
+		return {
+			requiresTwoFactor: true,
+			twoFactorToken: createTwoFactorLoginToken(configuredEmail),
+			user: {
+				email: configuredEmail
+			}
+		}
+	}
 
 	return {
-		token,
-		expiresIn,
-		user: {
-			email: configured.email
-		}
+		requiresTwoFactor: false,
+		message: "Login successful",
+		...issueCrmJwt()
+	}
+}
+
+export async function verifyCrmTwoFactorLogin(
+	twoFactorToken: string,
+	token: string | number
+) {
+	await verifyLoginTwoFactor(twoFactorToken, token)
+
+	return {
+		message: "Login successful",
+		requiresTwoFactor: false,
+		...issueCrmJwt()
 	}
 }
