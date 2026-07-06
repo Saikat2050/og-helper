@@ -13,10 +13,15 @@ export const EMAIL_TEMPLATE_TYPE = {
 		fileName: "leads_thrive_nest_email.ejs",
 		subject: "💼 New Website Inquiry | Tech Square Nest",
 		email: "soumas9277@gmail.com"
+	},
+	4: {
+		fileName: "north_craft_email.ejs",
+		subject: "💼 New Website Inquiry | North Craft",
+		email: "saikatsantra2050@gmail.com"
 	}
 }
 
-export const ALLOWED_EMAIL_TEMPLATE_TYPES = [1, 2, 3]
+export const ALLOWED_EMAIL_TEMPLATE_TYPES = [1, 2, 3, 4]
 
 export const OUTBOUND_EMAIL_TEMPLATE_TYPE = {
 	1: {
