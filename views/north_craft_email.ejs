@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NorthCraft | Premium Corporate Gifting</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Poppins',sans-serif;
+            background:
+                radial-gradient(circle at top,#164235 0%,#081915 45%,#020202 100%);
+            color:#fff;
+            min-height:100vh;
+            overflow-x:hidden;
+        }
+
+        body::before{
+            content:'';
+            position:fixed;
+            inset:0;
+            background-image:
+                radial-gradient(#d4af37 1px,transparent 1px);
+            background-size:35px 35px;
+            opacity:.06;
+            pointer-events:none;
+        }
+
+        .snow{
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            background-image:
+            radial-gradient(white 1px,transparent 1px),
+            radial-gradient(white 1px,transparent 1px),
+            radial-gradient(white 2px,transparent 2px);
+            background-size:180px 180px;
+            animation:snow 35s linear infinite;
+            opacity:.18;
+        }
+
+        @keyframes snow{
+            from{transform:translateY(-150px);}
+            to{transform:translateY(100vh);}
+        }
+
+        .container{
+            width:min(1150px,92%);
+            margin:auto;
+            padding:60px 0;
+        }
+
+        .hero{
+            text-align:center;
+            margin-bottom:60px;
+        }
+
+        .logo{
+            font-family:'Cinzel',serif;
+            font-size:70px;
+            color:#d7b56d;
+            letter-spacing:4px;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            color:#d4af37;
+            letter-spacing:4px;
+            text-transform:uppercase;
+            font-size:14px;
+        }
+
+        h2{
+            font-family:'Cinzel',serif;
+            font-size:42px;
+            margin:25px 0;
+            font-weight:600;
+        }
+
+        .desc{
+            max-width:720px;
+            margin:auto;
+            color:#d8d8d8;
+            line-height:1.8;
+        }
+
+        .wrapper{
+            display:grid;
+            grid-template-columns:1fr 520px;
+            gap:60px;
+            align-items:center;
+            margin-top:70px;
+        }
+
+        .left h3{
+            font-family:'Cinzel';
+            color:#d4af37;
+            font-size:30px;
+            margin-bottom:25px;
+        }
+
+        .features{
+            display:grid;
+            gap:18px;
+        }
+
+        .feature{
+            display:flex;
+            gap:15px;
+            align-items:center;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(212,175,55,.15);
+            padding:18px;
+            border-radius:14px;
+            backdrop-filter:blur(8px);
+        }
+
+        .feature span{
+            font-size:24px;
+        }
+
+        .form-card{
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(212,175,55,.35);
+            backdrop-filter:blur(18px);
+            border-radius:22px;
+            padding:35px;
+            box-shadow:0 0 60px rgba(0,0,0,.45);
+        }
+
+        .form-card h3{
+            font-family:'Cinzel';
+            color:#d4af37;
+            margin-bottom:30px;
+            text-align:center;
+            font-size:30px;
+        }
+
+        .group{
+            margin-bottom:18px;
+        }
+
+        input,
+        textarea{
+            width:100%;
+            padding:15px 18px;
+            border-radius:12px;
+            background:#101010;
+            border:1px solid rgba(212,175,55,.25);
+            color:#fff;
+            outline:none;
+            font-size:15px;
+        }
+
+        textarea{
+            resize:none;
+            min-height:140px;
+        }
+
+        input:focus,
+        textarea:focus{
+            border-color:#d4af37;
+            box-shadow:0 0 12px rgba(212,175,55,.25);
+        }
+
+        button{
+            width:100%;
+            padding:16px;
+            border:none;
+            border-radius:14px;
+            cursor:pointer;
+            background:linear-gradient(135deg,#e6c878,#b98c2f);
+            color:#111;
+            font-weight:700;
+            font-size:16px;
+            transition:.35s;
+        }
+
+        button:hover{
+            transform:translateY(-3px);
+            box-shadow:0 12px 30px rgba(212,175,55,.35);
+        }
+
+        footer{
+            margin-top:90px;
+            text-align:center;
+            color:#cfcfcf;
+            border-top:1px solid rgba(212,175,55,.15);
+            padding-top:30px;
+            font-size:14px;
+        }
+
+        @media(max-width:960px){
+
+            .wrapper{
+                grid-template-columns:1fr;
+            }
+
+            .logo{
+                font-size:48px;
+            }
+
+            h2{
+                font-size:34px;
+            }
+
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="snow"></div>
+
+<div class="container">
+
+    <section class="hero">
+
+        <div class="logo">NORTHCRAFT</div>
+
+        <div class="subtitle">
+            Curated • Thoughtful • Memorable
+        </div>
+
+        <h2>Luxury Corporate Gifting Experiences</h2>
+
+        <p class="desc">
+            Celebrate every relationship with thoughtfully curated premium hampers,
+            festive collections, employee joining kits and custom branded gifting
+            solutions designed to leave a lasting impression.
+        </p>
+
+    </section>
+
+    <section class="wrapper">
+
+        <div class="left">
+
+            <h3>Why Choose NorthCraft?</h3>
+
+            <div class="features">
+
+                <div class="feature">
+                    <span>🎁</span>
+                    Premium Corporate Hampers
+                </div>
+
+                <div class="feature">
+                    <span>🎄</span>
+                    Christmas & Festive Collections
+                </div>
+
+                <div class="feature">
+                    <span>✨</span>
+                    Luxury Custom Branding
+                </div>
+
+                <div class="feature">
+                    <span>🚚</span>
+                    PAN India Delivery
+                </div>
+
+                <div class="feature">
+                    <span>🤝</span>
+                    Dedicated Relationship Support
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="form-card">
+
+            <h3>Request a Quote</h3>
+
+            <form action="/enquiry" method="POST">
+
+                <div class="group">
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Full Name"
+                        required>
+                </div>
+
+                <div class="group">
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        required>
+                </div>
+
+                <div class="group">
+                    <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number"
+                        required>
+                </div>
+
+                <div class="group">
+                    <input
+                        type="text"
+                        name="company"
+                        placeholder="Company (Optional)">
+                </div>
+
+                <div class="group">
+                    <textarea
+                        name="message"
+                        placeholder="Tell us about your gifting requirements..."
+                        required></textarea>
+                </div>
+
+                <button type="submit">
+                    ✨ Send Enquiry
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <footer>
+
+        © <%= new Date().getFullYear() %> NorthCraft • Premium Corporate Gifting
+
+    </footer>
+
+</div>
+
+</body>
+</html>
