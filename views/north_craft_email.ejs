@@ -1,2 +1,294 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>New Lead | NorthCraft</title>  <style> *{margin:0;padding:0;box-sizing:border-box;} body{  background:#0d1815;  padding:40px 15px;  color:#f6f2e8;  font-family:Arial,Helvetica,sans-serif; } .container{  max-width:760px;  margin:auto;  background:#13241f;  border-radius:22px;  overflow:hidden;  border:1px solid #caa85d; } .hero{  padding:48px;  background:linear-gradient(135deg,#0d3b33,#1a4f43,#0b1d18);  color:#fff;  text-align:center; } .logo{  display:inline-block;  padding:10px 22px;  border:1px solid rgba(202,168,93,.5);  border-radius:40px;  color:#f3d89c;  letter-spacing:3px;  font-weight:bold; } .hero h1{margin:20px 0 10px;font-size:34px;color:#f6e2ad;} .hero p{line-height:28px;color:#efe8d2;} .content{padding:40px;} .section-title{  color:#d8b56a;  border-bottom:1px solid #3d564d;  padding-bottom:12px;  margin-bottom:20px;  font-size:20px; } .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;} .card{  background:#183129;  border:1px solid #3d564d;  border-radius:14px;  padding:18px; } .label{  color:#caa85d;  font-size:11px;  text-transform:uppercase;  letter-spacing:1px;  margin-bottom:8px; } .value{  color:#fff;  font-size:16px;  line-height:24px; } .message{  background:#183129;  border-left:4px solid #caa85d;  border-radius:12px;  padding:20px;  line-height:30px;  white-space:pre-wrap; } .footer{  background:#10211c;  text-align:center;  padding:35px;  border-top:1px solid #3d564d;  color:#d8d8d8; } .badge{  display:inline-block;  margin-top:16px;  padding:10px 18px;  border-radius:30px;  background:#caa85d;  color:#10211c;  font-weight:bold; } @media(max-width:700px){ .grid{grid-template-columns:1fr;} .hero{padding:32px 24px;} .content{padding:24px;} } </style> </head> <body> <div class="container"> <div class="hero"> <div class="logo">NORTHCRAFT</div> <h1>🎁 A New Gifting Enquiry Has Arrived</h1> <p>A potential customer has shown interest in NorthCraft. Review the enquiry below and connect with them at the earliest.</p> </div> <div class="content"> <div class="section-title">Customer Details</div> <div class="grid"> <div class="card"><div class="label">Name</div><div class="value"><%= name %></div></div> <div class="card"><div class="label">Email</div><div class="value"><%= email %></div></div> 
-div class="card"><div class="label">Phone</div><div class="value"><%= phone %></div></div> </div>  <div style="height:30px"></div>  <div class="section-title">Customer Message</div>  <div class="message"> <%= message %> </div>  <div style="margin-top:40px;padding:24px;background:#17362d;border-radius:16px;border:1px solid #caa85d;"> <h3 style="color:#f4dfab;margin-bottom:10px;">✨ Follow Up Quickly</h3> <p style="line-height:28px;color:#ece4cf;"> Responding within the first hour greatly improves the chances of converting an enquiry into a successful order. Thank you for choosing NorthCraft to create memorable gifting experiences. </p> </div>  </div>  <div class="footer"> <strong style="color:#f4dfab;">NorthCraft</strong><br> Curated • Thoughtful • Memorable<br><br>  Premium Corporate Gifting • Festive Hampers • Luxury Experiences  <div class="badge">New Lead Notification</div>  </div> </div> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NorthCraft | New Lead</title>
+
+<style>
+
+/* CSS WILL BE ADDED IN THE NEXT STEP */
+
+</style>
+
+</head>
+
+<body>
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+
+<tr>
+
+<td align="center">
+
+<table class="email-container" role="presentation" width="700" cellspacing="0" cellpadding="0">
+
+<!-- ====================================================== -->
+<!-- HERO -->
+<!-- ====================================================== -->
+
+<tr>
+
+<td class="hero">
+
+<div class="brand-tag">
+
+NEW LEAD NOTIFICATION
+
+</div>
+
+<div class="monogram">
+
+NC
+
+</div>
+
+<h1>
+
+NORTHCRAFT
+
+</h1>
+
+<p class="tagline">
+
+Curated • Thoughtful • Memorable
+
+</p>
+
+<div class="gold-divider"></div>
+
+<h2>
+
+🎁 A New Premium Enquiry Has Arrived
+
+</h2>
+
+<p class="hero-text">
+
+A potential customer has shown interest in NorthCraft's premium gifting experience.
+
+Review the details below and connect with the customer at the earliest opportunity.
+
+</p>
+
+</td>
+
+</tr>
+
+<!-- ====================================================== -->
+<!-- CUSTOMER DETAILS -->
+<!-- ====================================================== -->
+
+<tr>
+
+<td class="section">
+
+<h3>
+
+Customer Information
+
+</h3>
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+
+<tr>
+
+<td class="info-card">
+
+<div class="label">
+
+FULL NAME
+
+</div>
+
+<div class="value">
+
+<%= name %>
+
+</div>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td height="18"></td>
+
+</tr>
+
+<tr>
+
+<td class="info-card">
+
+<div class="label">
+
+EMAIL ADDRESS
+
+</div>
+
+<div class="value">
+
+<%= email %>
+
+</div>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td height="18"></td>
+
+</tr>
+
+<tr>
+
+<td class="info-card">
+
+<div class="label">
+
+PHONE NUMBER
+
+</div>
+
+<div class="value">
+
+<%= phone %>
+
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+<!-- ====================================================== -->
+<!-- MESSAGE -->
+<!-- ====================================================== -->
+
+<tr>
+
+<td class="section">
+
+<h3>
+
+Customer Requirements
+
+</h3>
+
+<div class="message-card">
+
+<div class="quote-mark">
+
+"
+
+</div>
+
+<p>
+
+<%= message %>
+
+</p>
+
+</div>
+
+</td>
+
+</tr>
+
+<!-- ====================================================== -->
+<!-- REMINDER -->
+<!-- ====================================================== -->
+
+<tr>
+
+<td class="reminder">
+
+<h3>
+
+✨ Recommended Action
+
+</h3>
+
+<p>
+
+Respond within the next <strong>30–60 minutes</strong>.
+
+Fast responses significantly increase the chances of converting this enquiry into a successful corporate gifting opportunity.
+
+</p>
+
+</td>
+
+</tr>
+
+<!-- ====================================================== -->
+<!-- FOOTER -->
+<!-- ====================================================== -->
+
+<tr>
+
+<td class="footer">
+
+<div class="footer-logo">
+
+NC
+
+</div>
+
+<h2>
+
+NORTHCRAFT
+
+</h2>
+
+<p>
+
+Premium Corporate Gifting
+
+</p>
+
+<p>
+
+Luxury Hampers • Festive Collections • Employee Welcome Kits
+
+</p>
+
+<div class="footer-divider"></div>
+
+<p class="footer-tagline">
+
+Curated • Thoughtful • Memorable
+
+</p>
+
+<div class="footer-badge">
+
+Premium Lead Notification
+
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>
