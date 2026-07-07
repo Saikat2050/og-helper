@@ -17,7 +17,7 @@ export const EMAIL_TEMPLATE_TYPE = {
 	4: {
 		fileName: "north_craft_email.ejs",
 		subject: "💼 New Website Inquiry | North Craft",
-		email: "saikatsantra2050@gmail.com"
+		email: "northcraftgifts@gmail.com"
 	}
 }
 
